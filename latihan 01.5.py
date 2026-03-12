@@ -1,0 +1,60 @@
+class BankAccount:
+    def __init__(self, owner, balance=0):
+        if balance < 0:
+            raise ValueError("Initial balance cannot be negative")
+        self.owner = owner
+        self.balance = balance
+
+    def deposit(self, amount):              # ketika memasukkan uang
+        if amount > 0:
+            self.balance += amount
+            return self.balance
+        else:
+            raise ValueError("Deposit amount must be greater than zero")
+
+    def withdraw(self, amount):             # ketika menarik saldo
+        if 0 < amount <= self.balance:
+            self.balance -= amount
+            return self.balance
+        else:
+            raise ValueError("Insufficient funds or invalid withdrawal amount")
+
+    def get_balance(self):                  # mengecek saldo
+        return self.balance
+
+# unit testing
+import unittest
+class TestBankAccount(unittest.TestCase):
+
+    def setUp(self):
+        self.account1 = BankAccount("chelsia", 100000)
+        self.account2 = BankAccount("viontika", 50000)
+
+    def test_deposit(self):
+        deposit_1 = self.account1.deposit(50000)
+        deposit_2 = self.account2.deposit(2500)
+
+        self.assertEqual(self.account1.get_balance(), 150000)
+        self.assertEqual(self.account2.get_balance(), 52500)
+
+    def test_withdraw(self):
+        withdraw_1 = self.account1.withdraw(40000)
+        withdraw_2 = self.account2.withdraw(500)
+
+        self.assertEqual(self.account1.get_balance(), 60000)
+        self.assertEqual(self.account2.get_balance(), 49500)
+
+    def test_get_balance(self):
+        self.assertEqual(self.account1.get_balance(), 100000)
+        self.assertEqual(self.account2.get_balance(), 50000)
+
+    def test_deposit_invalid(self):
+        with self.assertRaises(ValueError):
+            self.account1.deposit(-100)
+
+    def test_withdraw_invalid(self):
+        with self.assertRaises(ValueError):
+            self.account2.withdraw(100000)
+
+if __name__ == "__main__":
+    unittest.main()
